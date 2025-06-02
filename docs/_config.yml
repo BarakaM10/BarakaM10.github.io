@@ -1,7 +1,0 @@
-theme: minima 
-title: "My Blog Site"
-
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
-  - jekyll-sitemap
