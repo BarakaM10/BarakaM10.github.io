@@ -248,21 +248,7 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// var swiper = new Swiper(".mySwiper", {
-//       slidesPerView: 1,
-//       spaceBetween: 30,
-//       loop: true,
-//       pagination: {
-//         el: ".swiper-pagination",
-//         clickable: true,
-//       },
-//       navigation: {
-//         nextEl: ".swiper-button-next",
-//         prevEl: ".swiper-button-prev",
-//       },
-//     });
 
-// Add CSS animations for notifications
 const notificationStyles = document.createElement('style');
 notificationStyles.textContent = `
     @keyframes slideInRight {
@@ -440,3 +426,15 @@ if (scrollIndicator) {
         });
     });
 }
+
+const carousel = document.querySelector(".carousel");
+
+
+const arrowBtns = document.querySelectorAll(".wrapper i");
+const firstCardWidth = carousel.querySelector(".card").offsetWidth
+arrowBtns.forEach(btn => {
+    btn.addEventListener("click", ()=> {
+       carousel.scrollLeft += btn.id === "left" ? -firstCardWidth : firstCardWidth
+    });
+});
+
