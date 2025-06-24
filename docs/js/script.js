@@ -438,3 +438,31 @@ arrowBtns.forEach(btn => {
     });
 });
 
+const leftArrow = document.getElementById("left");
+const rightArrow = document.getElementById("right");
+
+function updateArrowVisibility() {
+    // Hide left arrow if at the start
+    if (carousel.scrollLeft <= 0) {
+        leftArrow.style.display = "none";
+    } else {
+        leftArrow.style.display = "";
+    }
+    // Hide right arrow if at the end
+    if (carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth - 10) {
+        rightArrow.style.display = "none";
+    } else {
+        rightArrow.style.display = "";
+    }
+}
+updateArrowVisibility()
+
+carousel.addEventListener("scroll", updateArrowVisibility);
+
+arrowBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+        setTimeout(updateArrowVisibility, 300); // Wait for scroll to finish
+    });
+});
+
+

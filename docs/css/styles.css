@@ -349,6 +349,15 @@ section {
     justify-content: center;
  }
 
+.log i {
+    position: static; /* or remove position property */
+    display: block;
+    margin: 10px auto 30px auto;
+    font-size: 3rem;
+    color: #654321;
+    /* animation: float 3s ease-in-out infinite; */
+    text-align: center;
+}
 .wrapper .carousel{
     display: grid;
     grid-auto-flow: column;
@@ -373,7 +382,9 @@ section {
     position: relative;
 }
 
-.wrapper i{
+
+.wrapper i:nth-child(2) {
+    left: -22px;
     height: 50px;
     width: 50px;
     background: #ffffff;
@@ -387,42 +398,59 @@ section {
     transform: translateY(-50%);
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
 }
-.wrapper i:first-child {
-    left: -22px;
-}
-.wrapper i:last-child {
+.wrapper i:nth-child(4) {
     right: -22px;
+    height: 50px;
+    width: 50px;
+    background: #ffffff;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    position: absolute;
+    font-size: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.23);
 }
-.carousel :where(.card, .img){
+
+#topper {
+    position:static;
+    font-size: 3rem;
+    color: #654321;
+    background: #ffffff;
+    margin: 0 auto 40px auto;
+}
+.carousel :where(.card){
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-direction: column;
 }
 
 .carousel .card{
     scroll-snap-align:start;
-    height:500px;
+    height: 600px;
     list-style: none;
-    background: #d9d9d9;
-    border-radius: 8px;
+    background: #ffffff;
+    border-radius: 20px;
     display: flex;
     padding-bottom: 15px;
     align-items: center;
     justify-content: center; 
     flex-direction: column;
-    box-shadow: 5px 0 30px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 5px 0 30px 0 rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease;
     width: 100%; 
 }
 
 
 .card p {
-    font-size: 1.2rem;
-    color: #333;
     margin: 0 20px;
     text-align: center;
-    padding: 5px;
+    font-size: 20px;
+    padding: 0 80px;
+    font-weight: 500;
+    color: #333
 }
 
 .carousel.dragging .card{
@@ -433,110 +461,23 @@ section {
 .carousel .dragging{
     scroll-behavior: auto;
 }
-.card .img{
-    border-radius: 50%;
-    margin-bottom: 15px;
-}
-.card .img img{
-    width: 140px;
-    height: 140px;
-    border-style: solid;
-    border-radius: 50%;
-    object-fit: cover;
-    border-color: #000000;
-}
 
+.card .quote-icon{
+    font-size: 30px;
+    color:#654321
+}
 .card h2 {
-    font-weight: 500;
+    font-weight: 550;
     font-size: 1.56rem;
-    margin: 40px 0 0;    
+    margin: 80px 0 0;
+    
 }
 
 .card span{
     color:#4c2b02;
-    font-size: 1.31rem;
-}
-/* .log {
-    position: relative;
-    max-width: 900px;
-    width:100%;
-    padding: 50px 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    display:flex;
-    align-items: center;
-    gap: 15px;
-}
-.log .log-image{
-    height: 170px;
-    width: 170px;
-    object-fit: cover;
-    border-radius: 50%;
+    font-size: 1.2rem;
 }
 
- 
-.log .slide{
-    display: flex;
-    align-items: center;
-    row-gap: 30px;
-   justify-content: center;
-   flex-direction: column;
-   background-color: #654321; 
-}
-
-.slide p{
-    text-align: center;
-    font-size: 14px;
-    padding: 0 100px;
-    font-weight: 500;
-    color: #333
-}
-.slide .quote-icon{
-    font-size: 30px;
-    color:#654321
-}
-
-.slide .log-details{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.log-details .log-title{
-    font-size: 14px;
-    font-weight: 600;
-    color:#000000;
-}
-
-.log-details .log-subtitle{
-    font-size: 12px;
-    font-weight: 400;
-    color:#000000;
-} */
-
-/* .swiper {
-  width: 100%;
-  height: 100%;
- }
-.swiper-slide {
-    text-align: center;
-    font-size: 18px;
-    background: #444;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.swiper-slide img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.swiper {
-    margin-left: auto;
-    margin-right: auto;
-} */
 /* Projects Section */
 .projects-grid {
     display: grid;
@@ -961,6 +902,7 @@ section {
         font-size: 2rem;
     }
 
+
 }
 
 @media (max-width: 480px) {
@@ -992,6 +934,16 @@ section {
     .contact-form {
         padding: 1.5rem;
     }
+
+    /* #topper {
+    position: fixed;
+    top: 5px;
+    left: 0px;
+    transform: translateX(-50%);
+    font-size: 3rem;
+    color: #654321;
+    background: #ffffff;
+} */
 }
 
 @media screen and (max-width: 600px){
