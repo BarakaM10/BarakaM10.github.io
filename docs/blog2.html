@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blog Entry | Unix Startup</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+        <link rel="stylesheet" href="css/entries.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <i class='bx bx-arrow-back back' onclick="window.history.back()"></i>
+            <div class="logHeading">
+                <i id="topper" class="devicon-unix-original context"></i>
+                <span class="heading">Unix Startup & Script Scheduling</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="log-meta">
+                <div class="date">
+                    <i class="fas fa-calendar"></i>
+                    <span>June 10, 2025</span>
+                </div>
+                <div class="reading-time">
+                    <i class="fas fa-clock"></i>
+                    <span>5 min read</span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h2>Unix Startup & Server Monitoring</h2>
+                
+                <p>This week I dove into Unix systems and bash scripting! I created a server monitoring script that runs every 15 minutes and logs system activity to CSV files. It's been an exciting journey learning about system administration and automation.</p>
+
+                <h3>What I Built</h3>
+                <ul>
+                    <li>A comprehensive server monitoring bash script</li>
+                    <li>Automated CSV logging system</li>
+                    <li>Cron job scheduling for continuous monitoring</li>
+                    <li>System resource tracking (CPU, memory, disk usage)</li>
+                    <li>Process monitoring and logging</li>
+                </ul>
+
+                <h3>The Server Monitoring Script</h3>
+                <p>The core of this project was building a bash script that captures various system metrics and saves them in a structured CSV format for later analysis.</p>
+
+                <div class="step">
+                    <h4>Step 1: Basic System Information Script</h4>
+                    <p>I started by creating a script that gathers essential system information:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>monitor.sh</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+#!/bin/bash
+
+# Create logs directory if it doesn't exist
+mkdir -p /var/log/server-monitor
+
+# Get current timestamp
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+# Get system information
+cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+memory_usage=$(free | grep Mem | awk '{printf "%.2f", $3/$2 * 100.0}')
+disk_usage=$(df -h / | awk 'NR==2{print $5}' | sed 's/%//')
+
+# Log to CSV
+echo "$timestamp,$cpu_usage,$memory_usage,$disk_usage" >> /var/log/server-monitor/system_stats.csv
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: Enhanced Monitoring with Process Tracking</h4>
+                    <p>I expanded the script to include process monitoring and network statistics:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>enhanced_monitor.sh</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+#!/bin/bash
+
+LOG_DIR="/var/log/server-monitor"
+mkdir -p $LOG_DIR
+
+timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+
+# System metrics
+cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
+memory_usage=$(free | grep Mem | awk '{printf "%.2f", $3/$2 * 100.0}')
+disk_usage=$(df -h / | awk 'NR==2{print $5}' | sed 's/%//')
+load_average=$(uptime | awk -F'load average:' '{print $2}' | cut -d, -f1 | sed 's/^ *//')
+
+# Process count
+process_count=$(ps aux | wc -l)
+
+# Network connections
+network_connections=$(netstat -an | grep ESTABLISHED | wc -l)
+
+# Log system stats
+echo "$timestamp,$cpu_usage,$memory_usage,$disk_usage,$load_average,$process_count,$network_connections" >> $LOG_DIR/system_stats.csv
+
+# Log top processes
+echo "=== Top Processes at $timestamp ===" >> $LOG_DIR/processes.log
+ps aux --sort=-%cpu | head -10 >> $LOG_DIR/processes.log
+echo "" >> $LOG_DIR/processes.log
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: Setting Up Cron Job</h4>
+                    <p>To run the script every 15 minutes, I configured a cron job:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+# Edit crontab
+crontab -e
+
+# Add this line to run every 15 minutes
+*/15 * * * * /path/to/enhanced_monitor.sh
+
+# Check if cron job is active
+crontab -l
+
+# View cron logs
+tail -f /var/log/cron
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 4: CSV Header Setup</h4>
+                    <p>I created a setup script to initialize the CSV files with proper headers:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>setup_monitoring.sh</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+#!/bin/bash
+
+LOG_DIR="/var/log/server-monitor"
+mkdir -p $LOG_DIR
+
+# Create CSV with headers if it doesn't exist
+if [ ! -f "$LOG_DIR/system_stats.csv" ]; then
+    echo "timestamp,cpu_usage,memory_usage,disk_usage,load_average,process_count,network_connections" > $LOG_DIR/system_stats.csv
+fi
+
+# Set permissions
+chmod 755 /path/to/enhanced_monitor.sh
+chmod 644 $LOG_DIR/system_stats.csv
+
+echo "Monitoring setup complete!"
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <h3>Key Unix Concepts Learned</h3>
+                <div class="learning-points">
+                    <div class="point">
+                        <div>
+                            <h4>Cron Jobs</h4>
+                            <p>Learned how to schedule tasks using crontab. The syntax */15 * * * * runs a job every 15 minutes.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>System Monitoring Commands</h4>
+                            <p>Mastered commands like top, ps, free, df, and netstat for gathering system information.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>Text Processing</h4>
+                            <p>Used awk, sed, and grep extensively for parsing command outputs and formatting data.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>File Permissions</h4>
+                            <p>Learned about chmod and file permissions, crucial for script execution and log file management.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Challenges Faced</h3>
+                <p>The biggest challenge was understanding the different output formats of various Unix commands and parsing them correctly. Each command has its own quirks:</p>
+                <ul>
+                    <li><strong>top command:</strong> Had to use -bn1 flag for batch mode to get single snapshot</li>
+                    <li><strong>free command:</strong> Memory calculation required understanding the relationship between total, used, and available memory</li>
+                    <li><strong>df command:</strong> Needed to extract just the percentage value from the output</li>
+                    <li><strong>File permissions:</strong> Initially had issues with cron not being able to execute the script due to permission problems</li>
+                </ul>
+
+                <h3>Results</h3>
+                <p>After running for a few days, the monitoring system successfully captured:</p>
+                <ul>
+                    <li>Over 200 data points of system metrics</li>
+                    <li>Detailed process logs showing resource usage patterns</li>
+                    <li>Network connection tracking over time</li>
+                    <li>System load patterns during different hours</li>
+                </ul>
+
+                <h3>Next Steps</h3>
+                <p>This monitoring foundation sets me up for the next phase of the project:</p>
+                <ul>
+                    <li>Integrate with PostgreSQL database for better data management</li>
+                    <li>Add email alerts for system threshold breaches</li>
+                    <li>Create a web dashboard for real-time monitoring</li>
+                    <li>Implement log rotation to prevent disk space issues</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-item prev" onclick="navigateToPost('prev')">
+                <i class="fas fa-chevron-left"></i>
+                <span>Previous Post</span>
+            </div>
+            <div class="nav-item next" onclick="navigateToPost('next')">
+                <span>Next Post</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 Baraka Maurice. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script src="js/blog.js"></script>
+    </body>
+</html>
