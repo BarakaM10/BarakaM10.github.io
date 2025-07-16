@@ -23,7 +23,9 @@ window.location.href = 'index.html';
 const blogPosts = [
     'blog1.html',
     'blog2.html', 
-    'blog3.html'
+    'blog3.html',
+    'blog4.html',
+    'blog5.html'
 ];
 
 // Navigation function

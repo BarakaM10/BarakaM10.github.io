@@ -232,6 +232,11 @@ code {
     margin: 2rem 0;
 }
 
+.learning-points li::marker {
+    color: #38a169;
+}
+
+
 .point {
     display: flex;
     gap: 1rem;

@@ -37,60 +37,32 @@
             <div class="description">
                 <h2>Unix Startup & Server Monitoring</h2>
                 
-                <p>This week I dove into Unix systems and bash scripting! I created a server monitoring script that runs every 15 minutes and logs system activity to CSV files. It's been an exciting journey learning about system administration and automation.</p>
+                <p>Yes unix, bash scripting the whole mix! I created a server monitoring script that runs every 15 minutes and logs system activity to CSV files. It was generally simple with the online resources(AI) about this field so the breakdown</p>
 
-                <h3>What I Built</h3>
+                <h3>Overview</h3>
                 <ul>
-                    <li>A comprehensive server monitoring bash script</li>
-                    <li>Automated CSV logging system</li>
+                    <li>Create a user on the test server from which the script will be running</li>
+                    <li>Create a bash script to load server stats from commands <code>iostat</code>,<code>df</code> and<code>free</code></li>
+                    <li>Filter stats and save them</li>
                     <li>Cron job scheduling for continuous monitoring</li>
-                    <li>System resource tracking (CPU, memory, disk usage)</li>
-                    <li>Process monitoring and logging</li>
                 </ul>
 
-                <h3>The Server Monitoring Script</h3>
-                <p>The core of this project was building a bash script that captures various system metrics and saves them in a structured CSV format for later analysis.</p>
+                <h3>The Bash Server Monitoring Script</h3>
+                <p>The core of this project was building a bash script that captures the system metrics and saves them in a structured CSV format for later analysis.</p>
 
                 <div class="step">
                     <h4>Step 1: Basic System Information Script</h4>
-                    <p>I started by creating a script that gathers essential system information:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>monitor.sh</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-bash">
-#!/bin/bash
-
-# Create logs directory if it doesn't exist
-mkdir -p /var/log/server-monitor
-
-# Get current timestamp
-timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-
-# Get system information
-cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
-memory_usage=$(free | grep Mem | awk '{printf "%.2f", $3/$2 * 100.0}')
-disk_usage=$(df -h / | awk 'NR==2{print $5}' | sed 's/%//')
-
-# Log to CSV
-echo "$timestamp,$cpu_usage,$memory_usage,$disk_usage" >> /var/log/server-monitor/system_stats.csv
-                            </code>
-                        </pre>
-                    </div>
+                    <p>This is setting up the script directory: <code>mkdir -p /home/user/server_stats</code></p>
+                    <p>Then open the file <code>nano server_stats.sh</code></p>
                 </div>
 
                 <div class="step">
-                    <h4>Step 2: Enhanced Monitoring with Process Tracking</h4>
-                    <p>I expanded the script to include process monitoring and network statistics:</p>
+                    <h4>Step 2:Configuring the script</h4>
+                    <p>The code I used to get the server metrics and save them to a csv:</p>
                     
                     <div class="code-block">
                         <div class="code-header">
-                            <span>enhanced_monitor.sh</span>
+                            <span>server-monitor.sh</span>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <i class="fas fa-copy"></i>
                             </button>
@@ -99,30 +71,49 @@ echo "$timestamp,$cpu_usage,$memory_usage,$disk_usage" >> /var/log/server-monito
                             <code class="language-bash">
 #!/bin/bash
 
-LOG_DIR="/var/log/server-monitor"
-mkdir -p $LOG_DIR
 
-timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+DATE=$(date +%Y%m%d)
+SCRIPT_PATH=$(realpath "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+mkdir -p "$SCRIPT_DIR/logs"
+ERRFILE="$SCRIPT_DIR/logs/server-monitor-$DATE-error.log"
 
-# System metrics
-cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
-memory_usage=$(free | grep Mem | awk '{printf "%.2f", $3/$2 * 100.0}')
-disk_usage=$(df -h / | awk 'NR==2{print $5}' | sed 's/%//')
-load_average=$(uptime | awk -F'load average:' '{print $2}' | cut -d, -f1 | sed 's/^ *//')
+#files for saving server statistics
+MEMORY_FILE="$SCRIPT_DIR/logs/memory-metrics-$DATE.csv"
+DISK_FILE="$SCRIPT_DIR/logs/disk-usage-metrics-$DATE.csv"
+IO_FILE="$SCRIPT_DIR/logs/io-metrics-$DATE.csv"
+CURRENT_TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
 
-# Process count
-process_count=$(ps aux | wc -l)
+#create headers for the files
+[[ ! -f "$MEMORY_FILE" ]] && echo "Time,Total_Memory,Memory_Used" > $MEMORY_FILE
+[[ ! -f "$DISK_FILE" ]] && echo "Time,Device,Size,Available,Usage" > $DISK_FILE
+[[ ! -f "$IO_FILE" ]] && echo "Time,Io_wait,Idle,TPS,KBW" > $IO_FILE
 
-# Network connections
-network_connections=$(netstat -an | grep ESTABLISHED | wc -l)
+#saving memory stats
+## LOG FILES
+MEMORY_STATS=$(free -h | grep "Mem:" 2>> "$ERRFILE")
+MEM_TOTAL=$(echo $MEMORY_STATS | awk '{print $2}' 2>> "$ERRFILE")
+MEM_USED=$(echo $MEMORY_STATS | awk '{print $3}' 2>> "$ERRFILE")
+echo "$(date +'%d/%m/%Y %H:%M:%S'),$MEM_TOTAL,$MEM_USED" >> "$MEMORY_FILE"
 
-# Log system stats
-echo "$timestamp,$cpu_usage,$memory_usage,$disk_usage,$load_average,$process_count,$network_connections" >> $LOG_DIR/system_stats.csv
+#Saving disk usage stats
+#LOG FILES
+df -h | grep -E "^/dev/" | while read specs; do
+    DEVICE=$(echo $specs | awk '{print $1}' 2>> "$ERRFILE")
+    SIZE=$(echo $specs | awk '{print $2}' 2>> "$ERRFILE")
+    AVAIL=$(echo $specs | awk '{print $4}' 2>> "$ERRFILE")
+    USE=$(echo $specs | awk '{print $5}' | sed 's/%//' 2>> "$ERRFILE")
+    echo "$(date +'%d/%m/%Y %H:%M:%S'),$DEVICE,$SIZE,$AVAIL,$USE" >> "$DISK_FILE"
+done 2>> "$ERRFILE"
 
-# Log top processes
-echo "=== Top Processes at $timestamp ===" >> $LOG_DIR/processes.log
-ps aux --sort=-%cpu | head -10 >> $LOG_DIR/processes.log
-echo "" >> $LOG_DIR/processes.log
+
+#Saving IO stats
+IOWAIT=$(iostat -c | awk '/avg-cpu:/{getline; print $4}' 2>> "$ERRFILE" )
+IDLE=$(iostat -c | awk '/avg-cpu:/{getline; print $6}' 2>> "$ERRFILE" )
+TPS=$(iostat -d | awk '/^sda/{print $2}' 2>> "ERRFILE" )
+KBW=$(iostat -d | awk '/^sda/{print $4}' 2>> "ERRFILE" )
+echo "$(date +'%d/%m/%Y %H:%M:%S'),$IOWAIT,$IDLE,$TPS,$KBW" >> "$IO_FILE"
+
                             </code>
                         </pre>
                     </div>
@@ -131,6 +122,7 @@ echo "" >> $LOG_DIR/processes.log
                 <div class="step">
                     <h4>Step 3: Setting Up Cron Job</h4>
                     <p>To run the script every 15 minutes, I configured a cron job:</p>
+                    <p>To edit the crontab run <code>crontab -e</code></p>
                     
                     <div class="code-block">
                         <div class="code-header">
@@ -141,61 +133,32 @@ echo "" >> $LOG_DIR/processes.log
                         </div>
                         <pre>
                             <code class="language-bash">
-# Edit crontab
-crontab -e
-
 # Add this line to run every 15 minutes
-*/15 * * * * /path/to/enhanced_monitor.sh
+*/15 * * * * /home/user/server_stats/server_stats.sh
 
-# Check if cron job is active
-crontab -l
-
-# View cron logs
-tail -f /var/log/cron
                             </code>
                         </pre>
                     </div>
+                    then run <code>chmod +x server_stats.sh</code> to make the script executable
                 </div>
 
-                <div class="step">
-                    <h4>Step 4: CSV Header Setup</h4>
-                    <p>I created a setup script to initialize the CSV files with proper headers:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>setup_monitoring.sh</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-bash">
-#!/bin/bash
-
-LOG_DIR="/var/log/server-monitor"
-mkdir -p $LOG_DIR
-
-# Create CSV with headers if it doesn't exist
-if [ ! -f "$LOG_DIR/system_stats.csv" ]; then
-    echo "timestamp,cpu_usage,memory_usage,disk_usage,load_average,process_count,network_connections" > $LOG_DIR/system_stats.csv
-fi
-
-# Set permissions
-chmod 755 /path/to/enhanced_monitor.sh
-chmod 644 $LOG_DIR/system_stats.csv
-
-echo "Monitoring setup complete!"
-                            </code>
-                        </pre>
-                    </div>
-                </div>
-
-                <h3>Key Unix Concepts Learned</h3>
+                <h3>Lessons </h3>
                 <div class="learning-points">
                     <div class="point">
                         <div>
                             <h4>Cron Jobs</h4>
-                            <p>Learned how to schedule tasks using crontab. The syntax */15 * * * * runs a job every 15 minutes.</p>
+                            <p>Learned how to schedule tasks using crontab. The syntax */15 * * * * runs a job every 15 minutes.</p><br>
+                            <p>Cron uses five fields to schedule tasks: minute, hour, day of month, month, and day of week.
+                                <ul>
+                                <li>Asterisks (`*`) mean "every" value.</li>
+                                <li>For example, `*/15 * * * *` runs every 15 minutes.</li>
+                                <li>`0 * * * *` runs at the start of every hour.</li>
+                                <li>`0 0 * * *` runs daily at midnight.</li>
+                                <li>You can set ranges like `9-17` (9 AM to 5 PM), lists like `1,15` (1st and 15th), or steps like `*/30` (every 30 minutes).</li>
+                                <li>Full examples: `0 9 * * *` runs daily at 9 AM, `0 0 1 * *` runs monthly on the 1st, and `0 0 * * 0` runs every Sunday.</li></p>
+                                </ul>
+                                
+
                         </div>
                     </div>
                     <div class="point">
@@ -208,33 +171,14 @@ echo "Monitoring setup complete!"
                         <div>
                             <h4>Text Processing</h4>
                             <p>Used awk, sed, and grep extensively for parsing command outputs and formatting data.</p>
-                        </div>
-                    </div>
-                    <div class="point">
-                        <div>
-                            <h4>File Permissions</h4>
-                            <p>Learned about chmod and file permissions, crucial for script execution and log file management.</p>
+                            <ul>
+                                <li>grep searches for matching patterns in text.</li>
+                                <li>sed finds and replaces text, delete lines, or modify content in-place.</li>
+                                <li>awk extracts fields, performs calculations, and format text based on rules.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-
-                <h3>Challenges Faced</h3>
-                <p>The biggest challenge was understanding the different output formats of various Unix commands and parsing them correctly. Each command has its own quirks:</p>
-                <ul>
-                    <li><strong>top command:</strong> Had to use -bn1 flag for batch mode to get single snapshot</li>
-                    <li><strong>free command:</strong> Memory calculation required understanding the relationship between total, used, and available memory</li>
-                    <li><strong>df command:</strong> Needed to extract just the percentage value from the output</li>
-                    <li><strong>File permissions:</strong> Initially had issues with cron not being able to execute the script due to permission problems</li>
-                </ul>
-
-                <h3>Results</h3>
-                <p>After running for a few days, the monitoring system successfully captured:</p>
-                <ul>
-                    <li>Over 200 data points of system metrics</li>
-                    <li>Detailed process logs showing resource usage patterns</li>
-                    <li>Network connection tracking over time</li>
-                    <li>System load patterns during different hours</li>
-                </ul>
 
                 <h3>Next Steps</h3>
                 <p>This monitoring foundation sets me up for the next phase of the project:</p>
@@ -242,7 +186,6 @@ echo "Monitoring setup complete!"
                     <li>Integrate with PostgreSQL database for better data management</li>
                     <li>Add email alerts for system threshold breaches</li>
                     <li>Create a web dashboard for real-time monitoring</li>
-                    <li>Implement log rotation to prevent disk space issues</li>
                 </ul>
             </div>
         </div>
