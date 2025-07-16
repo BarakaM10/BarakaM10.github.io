@@ -478,6 +478,17 @@ section {
     font-size: 1.2rem;
 }
 
+.learnMore{
+    margin-top: 1rem;
+    padding: 10px;
+    font-size: 1rem;
+    background: #654321;
+    color:white;
+    border-style: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 /* Projects Section */
 .projects-grid {
     display: grid;

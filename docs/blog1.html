@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blog Entry | GitHub Pages Setup</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+        <link rel="stylesheet" href="css/entries.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <i class='bx bx-arrow-back back' onclick="window.history.back()"></i>
+            <div class="logHeading">
+                <i id="topper" class="fab fa-git-alt context"></i>
+                <span class="heading">GitHub Pages Setup Journey</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="log-meta">
+                <div class="date">
+                    <i class="fas fa-calendar"></i>
+                    <span>June 2, 2025</span>
+                </div>
+                <div class="reading-time">
+                    <i class="fas fa-clock"></i>
+                    <span>3 min read</span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h2>Setting Up GitHub Pages </h2>
+                
+                <p>So, my coding documentation starts, I used GitHub Pages to host my blog for obvious reasons(it's free hosting) I can learn frontend the more I update the blogs and tracking my progress as I learn new technologies. So alot of talk here's my first entry, simplest of them.</p>
+
+                <h3>Overview</h3>
+                <ul>
+                    <li>Created a new GitHub repository for my blog</li>
+                    <li>Took a tutorial in setting up the pages I highly recommend <a href="https://github.com/skills/github-pages">Github Pages Tutorial</a></li>
+                    <li>Set up GitHub Pages with jekyll and minima</li>
+                    <li>Configured the repository settings for automatic deployment</li>
+                    <li>Created the basic HTML structure for my blog needed it to be more creative than plain jekyll</li>
+                </ul>
+
+                <h3>The Setup Process</h3>
+                <p>Setting up GitHub Pages was surprisingly straightforward after following the tutorial. Here's the step-by-step approach I took:</p>
+
+                <div class="step">
+                    <h4>Step 1: Repository Creation</h4>
+                    <p>First, I created a new repository on GitHub. The naming convention is important - for a user site, it should be <code>username.github.io</code>. Replace my username with yours.</p>
+                    
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+# Clone the repository
+git clone https://github.com/BarakaM10/BarakaM10.github.io.git
+cd BarakaM10.github.io
+
+# Create initial files
+touch index.html
+touch README.md
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: Basic HTML Structure</h4>
+                    <p>I started with a simple HTML file to test the deployment:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>index.html</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Maurice's Coding Journey&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Welcome to My Coding Blog&lt;/h1&gt;
+    &lt;p&gt;This is where I'll document my learning journey!&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: GitHub Pages Configuration</h4>
+                    <p>In the repository settings, I navigated to the Pages section and configured:</p>
+                    <ul>
+                        <li>Source: Deploy from a branch</li>
+                        <li>Branch: main</li>
+                        <li>Folder: / (root)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Step 4: Deployment Commands</h4>
+                    <p>Here are the git commands I used to deploy my first version:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Git Commands</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                            <pre>
+                                <code class="language-bash">
+# Add all files
+git add .
+
+# Commit changes
+git commit -m "Initial blog setup with GitHub Pages"
+
+# Push to main branch
+git push origin main
+                                </code>
+                            </pre>
+                    </div>
+                </div>
+
+                <h3>Lessons</h3>
+                <div class="learning-points">
+                    <div class="point">
+                        <div>
+                            <h4>GitHub Actions</h4>
+                            <p>GitHub Pages automatically uses GitHub Actions for deployment. I can see the workflow in the Actions tab.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>Static Site Hosting</h4>
+                            <p>GitHub Pages only hosts static sites - no server-side processing, so only HTML, CSS, and JavaScript.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>HTML and JavaScript</h4>
+                            <p>Got a much needed refresher course of HTML and CSS and kickstarted my JavaScript journey and it's too exciting.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Next Steps</h3>
+                <p>My coding journey has just begun! Here's what I plan to work on next:</p>
+                <ul>
+                    <li>Improve the CSS styling with a proper color theme</li>
+                    <li>Add responsive design for mobile devices</li>
+                    <li>Implement a proper navigation system</li>
+                    <li>Create more blog posts about my learning progress</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-item prev disabled">
+                <i class="fas fa-chevron-left"></i>
+                <span>Previous Post</span>
+            </div>
+            <div class="nav-item next">
+                <span>Next Post</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 Baraka Maurice. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script src="js/blog.js"></script>
+    </body>
+</html>
