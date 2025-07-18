@@ -25,7 +25,8 @@ const blogPosts = [
     'blog2.html', 
     'blog3.html',
     'blog4.html',
-    'blog5.html'
+    'blog5.html',
+    'blog6.html'
 ];
 
 // Navigation function
