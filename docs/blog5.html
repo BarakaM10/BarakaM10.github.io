@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blog Entry | NextJS Website Setup</title>
+        <title>Blog Entry | Figma UI Redesign</title>
         <link rel="icon" type="image/x-icon" href="assets/favicon.png">
         <link rel="stylesheet" href="css/entries.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -17,8 +17,8 @@
         <div class="header">
             <i class='bx bx-arrow-back back' onclick="window.history.back()"></i>
             <div class="logHeading">
-                <i id="topper" class="devicon-nextjs-plain context"></i>
-                <span class="heading">NextJS Website Migration</span>
+                <i id="topper" class="fab fa-figma context"></i>
+                <span class="heading">Figma UI Redesign Journey</span>
             </div>
         </div>
 
@@ -26,273 +26,211 @@
             <div class="log-meta">
                 <div class="date">
                     <i class="fas fa-calendar"></i>
-                    <span>June 23, 2025</span>
+                    <span>June 19, 2025</span>
                 </div>
                 <div class="reading-time">
                     <i class="fas fa-clock"></i>
-                    <span>4 min read</span>
+                    <span>5 min read</span>
                 </div>
             </div>
 
             <div class="description">
-                <h2>NextJS Website Migration Journey</h2>
+                <h2>Esomelo App UI Redesign</h2>
                 
-                <p>The long anticipated website migration has started! Well, I've just cloned the repo and set up the environment, so we'll see how it goes. Moving from a static HTML/CSS/JS setup to a modern React-based NextJS framework is both exciting and challenging. This migration represents a significant step forward in my development skills.</p>
+                <p>Started redesigning the UI of the Esomelo application - an app designed for school management. This has been an interesting task because my skills in color selection and discernment are wanting, but it's going well! Working with Figma has opened up new possibilities for creating intuitive and visually appealing interfaces.</p>
 
-                <h3>Why NextJS?</h3>
-                <p>After working with vanilla HTML, CSS, and JavaScript for my blog, I realized the limitations when it comes to building more complex, scalable applications. NextJS offers several advantages:</p>
+                <h3>Project Overview</h3>
                 <ul>
-                    <li>Server-side rendering for better SEO and performance</li>
-                    <li>Built-in routing system</li>
-                    <li>Automatic code splitting and optimization</li>
-                    <li>Easy deployment with Vercel</li>
-                    <li>Great developer experience with hot reloading</li>
-                    <li>React-based component architecture</li>
+                    <li>Analyzing the existing Esomelo school management application</li>
+                    <li>Identifying pain points in the current user interface</li>
+                    <li>Creating wireframes and mockups in Figma</li>
+                    <li>Developing a cohesive color scheme and typography system</li>
+                    <li>Focusing on user experience improvements</li>
                 </ul>
 
-                <h3>Project Setup</h3>
-                <p>Getting started with NextJS was surprisingly straightforward. Here's how I set up the development environment:</p>
+                <h3>The Design Process</h3>
+                <p>My approach to redesigning the Esomelo app involved several key phases, each building upon the previous to create a more user-friendly experience.</p>
 
                 <div class="step">
-                    <h4>Step 1: Environment Setup</h4>
-                    <p>First, I made sure I had the latest version of Node.js installed and then created a new NextJS project:</p>
+                    <h4>Step 1: User Research & Analysis</h4>
+                    <p>First, I spent time understanding the current application and identifying areas for improvement:</p>
+                    <ul>
+                        <li>Analyzed user flow and navigation patterns</li>
+                        <li>Identified cluttered interface elements</li>
+                        <li>Noted inconsistent color usage and typography</li>
+                        <li>Documented accessibility concerns</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: Wireframing</h4>
+                    <p>Created low-fidelity wireframes to establish the basic structure and layout:</p>
+                    <ul>
+                        <li>Simplified navigation menu structure</li>
+                        <li>Reorganized dashboard layout for better information hierarchy</li>
+                        <li>Designed card-based components for better content organization</li>
+                        <li>Planned responsive breakpoints for mobile and tablet views</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: Color Palette Development</h4>
+                    <p>This was the most challenging part for me, but I developed a systematic approach:</p>
                     
                     <div class="code-block">
                         <div class="code-header">
-                            <span>Terminal</span>
+                            <span>Color Palette</span>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
                         <pre>
-                            <code class="language-bash">
-# Check Node.js version
-node --version
+                            <code class="language-css">
+/* Primary Colors */
+--primary-blue: #2563eb;
+--primary-light: #3b82f6;
+--primary-dark: #1d4ed8;
 
-# Create new NextJS project
-npx create-next-app@latest my-portfolio
-cd my-portfolio
+/* Secondary Colors */
+--secondary-green: #10b981;
+--secondary-orange: #f59e0b;
+--secondary-red: #ef4444;
 
-# Install additional dependencies
-npm install tailwindcss postcss autoprefixer
-npm install @next/font lucide-react
-
-# Run development server
-npm run dev
+/* Neutral Colors */
+--gray-50: #f9fafb;
+--gray-100: #f3f4f6;
+--gray-600: #4b5563;
+--gray-900: #111827;
                             </code>
                         </pre>
                     </div>
                 </div>
 
                 <div class="step">
-                    <h4>Step 2: Project Structure</h4>
-                    <p>NextJS comes with a well-organized project structure. Here's what I'm working with:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>Project Structure</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-plaintext">
-my-portfolio/
-├── app/
-│   ├── globals.css
-│   ├── layout.js
-│   ├── page.js
-│   └── components/
-├── public/
-│   ├── assets/
-│   └── favicon.ico
-├── lib/
-├── package.json
-└── next.config.js
-                            </code>
-                        </pre>
-                    </div>
+                    <h4>Step 4: Component Design</h4>
+                    <p>Created reusable design components in Figma:</p>
+                    <ul>
+                        <li>Button variations (primary, secondary, danger, success)</li>
+                        <li>Form input fields with proper validation states</li>
+                        <li>Card components for displaying student and class information</li>
+                        <li>Navigation components with active states</li>
+                        <li>Modal and dialog designs for actions and confirmations</li>
+                    </ul>
                 </div>
 
                 <div class="step">
-                    <h4>Step 3: Tailwind CSS Configuration</h4>
-                    <p>I decided to use Tailwind CSS for styling instead of writing custom CSS. Here's the configuration:</p>
+                    <h4>Step 5: Dashboard Redesign</h4>
+                    <p>Focused on creating a clean, information-rich dashboard:</p>
                     
                     <div class="code-block">
                         <div class="code-header">
-                            <span>tailwind.config.js</span>
+                            <span>Dashboard Layout Structure</span>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
                         <pre>
-                            <code class="language-javascript">
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: '#654321',
-        secondary: '#fbbf24',
-        accent: '#512c0a',
-      },
-      fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
-      },
-    },
-  },
-  plugins: [],
-}
-                            </code>
-                        </pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <h4>Step 4: Creating the Layout Component</h4>
-                    <p>Started with a basic layout component that will be shared across all pages:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>app/layout.js</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-javascript">
-import { Inter } from 'next/font/google'
-import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'Baraka Maurice | Developer Portfolio',
-  description: 'Full-stack developer portfolio showcasing projects and blog posts',
-}
-
-export default function RootLayout({ children }) {
-  return (
-    &lt;html lang="en"&gt;
-      &lt;body className={inter.className}&gt;
-        &lt;div className="min-h-screen bg-gray-50"&gt;
-          {children}
+                            <code class="language-html">
+&lt;div class="dashboard"&gt;
+    &lt;header class="top-nav"&gt;
+        &lt;!-- School logo and navigation --&gt;
+    &lt;/header&gt;
+    
+    &lt;aside class="sidebar"&gt;
+        &lt;!-- Main navigation menu --&gt;
+    &lt;/aside&gt;
+    
+    &lt;main class="content"&gt;
+        &lt;div class="stats-grid"&gt;
+            &lt;!-- Key metrics cards --&gt;
         &lt;/div&gt;
-      &lt;/body&gt;
-    &lt;/html&gt;
-  )
-}
-                            </code>
-                        </pre>
-                    </div>
-                </div>
-
-                <div class="step">
-                    <h4>Step 5: Home Page Component</h4>
-                    <p>Created the main page component, starting with a simple structure:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>app/page.js</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-javascript">
-import Navigation from './components/Navigation'
-import Hero from './components/Hero'
-import About from './components/About'
-import Skills from './components/Skills'
-import Projects from './components/Projects'
-import Contact from './components/Contact'
-
-export default function Home() {
-  return (
-    &lt;main&gt;
-      &lt;Navigation /&gt;
-      &lt;Hero /&gt;
-      &lt;About /&gt;
-      &lt;Skills /&gt;
-      &lt;Projects /&gt;
-      &lt;Contact /&gt;
+        
+        &lt;div class="quick-actions"&gt;
+            &lt;!-- Common tasks --&gt;
+        &lt;/div&gt;
+        
+        &lt;div class="recent-activity"&gt;
+            &lt;!-- Latest updates --&gt;
+        &lt;/div&gt;
     &lt;/main&gt;
-  )
-}
+&lt;/div&gt;
                             </code>
                         </pre>
                     </div>
                 </div>
 
-                <h3>Migration Challenges</h3>
+                <h3>Key Design Improvements</h3>
                 <div class="learning-points">
                     <div class="point">
                         <div>
-                            <h4>Component Thinking</h4>
-                            <p>Moving from procedural HTML/CSS/JS to component-based architecture requires a shift in thinking. Breaking down the UI into reusable components is both powerful and initially confusing.</p>
+                            <h4>Information Hierarchy</h4>
+                            <p>Used typography scales and spacing to create clear visual hierarchy, making it easier for users to scan and find information quickly.</p>
                         </div>
                     </div>
                     <div class="point">
                         <div>
-                            <h4>State Management</h4>
-                            <p>Learning React hooks like useState and useEffect for managing component state and side effects. This is very different from vanilla JavaScript event handling.</p>
+                            <h4>Consistent Icon Usage</h4>
+                            <p>Implemented a consistent icon system using Feather icons, ensuring all interface elements have a unified visual language.</p>
                         </div>
                     </div>
                     <div class="point">
                         <div>
-                            <h4>CSS-in-JS vs Tailwind</h4>
-                            <p>Adapting to Tailwind's utility-first approach after writing custom CSS. The learning curve is steep, but the productivity gains are significant.</p>
+                            <h4>Accessibility Focus</h4>
+                            <p>Ensured proper color contrast ratios and included focus states for keyboard navigation, making the app more inclusive.</p>
                         </div>
                     </div>
                     <div class="point">
                         <div>
-                            <h4>Build Process</h4>
-                            <p>Understanding NextJS's build process, including server-side rendering, static generation, and the differences between development and production builds.</p>
+                            <h4>Mobile-First Approach</h4>
+                            <p>Designed responsive layouts that work seamlessly across devices, considering that many users might access the app on mobile devices.</p>
                         </div>
                     </div>
                 </div>
 
-                <h3>What I've Learned So Far</h3>
-                <p>Even though I'm just getting started, I've already learned several important concepts:</p>
+                <h3>Figma Features I Learned</h3>
+                <p>This project helped me explore several powerful Figma features:</p>
                 <ul>
-                    <li><strong>JSX Syntax:</strong> Writing HTML-like syntax within JavaScript</li>
-                    <li><strong>Props:</strong> Passing data between components</li>
-                    <li><strong>File-based Routing:</strong> How NextJS automatically creates routes based on file structure</li>
-                    <li><strong>Image Optimization:</strong> Using NextJS's built-in Image component for better performance</li>
-                    <li><strong>CSS Modules:</strong> Scoped styling to prevent CSS conflicts</li>
-                    <li><strong>API Routes:</strong> Creating serverless functions within the NextJS app</li>
+                    <li><strong>Auto Layout:</strong> Created responsive components that adapt to content changes</li>
+                    <li><strong>Component Variants:</strong> Built button and form components with multiple states</li>
+                    <li><strong>Color Styles:</strong> Established a consistent color system across all designs</li>
+                    <li><strong>Typography Styles:</strong> Created text styles for headings, body text, and captions</li>
+                    <li><strong>Prototyping:</strong> Added interactive transitions between screens</li>
+                    <li><strong>Design System:</strong> Organized components into a reusable library</li>
                 </ul>
 
-                <h3>Development Workflow</h3>
-                <p>My current development process involves:</p>
-                <ul>
-                    <li>Planning components and their relationships</li>
-                    <li>Creating reusable UI components</li>
-                    <li>Testing components in isolation</li>
-                    <li>Integrating components into pages</li>
-                    <li>Optimizing for performance and SEO</li>
-                    <li>Deploying to Vercel for testing</li>
-                </ul>
+                <h3>Challenges & Solutions</h3>
+                <div class="learning-points">
+                    <div class="point">
+                        <div>
+                            <h4>Color Selection Difficulty</h4>
+                            <p>Used online color palette generators and accessibility checkers to ensure good contrast and harmony. Tools like Coolors.co and WebAIM's contrast checker were invaluable.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>Information Overload</h4>
+                            <p>Applied progressive disclosure principles, showing only essential information initially and allowing users to drill down for more details when needed.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>Consistency Across Screens</h4>
+                            <p>Created a comprehensive style guide and component library to ensure consistency across all app screens and user flows.</p>
+                        </div>
+                    </div>
+                </div>
 
                 <h3>Next Steps</h3>
-                <p>The migration is just beginning, but I have a clear roadmap ahead:</p>
+                <p>The redesign is progressing well, but there's still work to be done:</p>
                 <ul>
-                    <li>Complete the hero section and navigation components</li>
-                    <li>Migrate the blog system to use MDX for better content management</li>
-                    <li>Implement dynamic routing for blog posts</li>
-                    <li>Add animations and transitions using Framer Motion</li>
-                    <li>Set up a headless CMS for content management</li>
-                    <li>Implement dark mode toggle</li>
-                    <li>Add search functionality for blog posts</li>
-                    <li>Deploy to production with custom domain</li>
+                    <li>Complete the remaining screen designs (reports, settings, user management)</li>
+                    <li>Create detailed prototypes for user testing</li>
+                    <li>Collaborate with developers on implementation feasibility</li>
+                    <li>Conduct usability testing with actual school administrators</li>
+                    <li>Iterate based on feedback and create final design specifications</li>
                 </ul>
 
-                <p>This NextJS migration represents a significant leap in my development journey. While there's still much to learn, the foundation is solid, and I'm excited to see how this more modern approach will improve both the development experience and the final product.</p>
+                <p>This project has significantly improved my UI design skills and taught me the importance of systematic design thinking. While color selection remains challenging, I'm developing better instincts for creating visually appealing and functional interfaces.</p>
             </div>
         </div> -->
 
@@ -301,7 +239,7 @@ export default function Home() {
                 <i class="fas fa-chevron-left"></i>
                 <span>Previous Post</span>
             </div>
-            <div class="nav-item next disabled">
+            <div class="nav-item next">
                 <span>Next Post</span>
                 <i class="fas fa-chevron-right"></i>
             </div>

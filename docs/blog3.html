@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blog Entry | PostgreSQL Database Integration</title>
+        <title>Blog Entry | Docker PostgreSQL Integration</title>
         <link rel="icon" type="image/x-icon" href="assets/favicon.png">
         <link rel="stylesheet" href="css/entries.css">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -12,105 +12,160 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    
     </head>
     <body>
         <div class="header">
             <i class='bx bx-arrow-back back' onclick="window.history.back()"></i>
             <div class="logHeading">
-                <i id="topper" class="devicon-postgresql-plain context"></i>
-                <span class="heading">PostgreSQL Database Integration</span>
+                <i id="topper" class="devicon-docker-plain context"></i>
+                <span class="heading">Docker PostgreSQL Integration</span>
             </div>
         </div>
 
-        <!-- <div class="container">
+        <div class="container">
             <div class="log-meta">
                 <div class="date">
                     <i class="fas fa-calendar"></i>
                     <span>June 15, 2025</span>
                 </div>
-                <div class="reading-time">
-                    <i class="fas fa-clock"></i>
-                    <span>7 min read</span>
-                </div>
             </div>
 
             <div class="description">
-                <h2>PostgreSQL Database Integration & Grafana Visualization</h2>
+                <h2>Docker, PostgreSQL Integration</h2>
                 
-                <p>Taking the server monitoring system to the next level! I integrated PostgreSQL database to store the server logs and set up Grafana dashboards to visualize the data. This combination transforms raw CSV logs into meaningful insights through beautiful, interactive dashboards.</p>
+                <p>Following the metric generation, the next step is storage; moving from CSV files to a database. Installing PostgreSQL directly on the server is practical but I containerized it with Docker instead so I will elaborate on that.</p>
 
-                <h3>Architecture Overview</h3>
+                <h3>Overview</h3>
                 <ul>
-                    <li>Migrated from CSV files to PostgreSQL database storage</li>
-                    <li>Created normalized database schema for efficient querying</li>
-                    <li>Modified bash scripts to insert data directly into PostgreSQL</li>
-                    <li>Set up Grafana for real-time dashboard visualization</li>
-                    <li>Implemented data retention policies for optimal performance</li>
+                    <li>Containerized PostgreSQL database using Docker by creating a docker-compose file</li>
+                    <li>Modified bash monitoring script to interact with Docker container</li>
+                    <li>Created database schema and tables using Docker exec commands</li>
                 </ul>
 
-                <h3>Database Setup</h3>
-                <p>First, I designed and implemented the PostgreSQL database schema to store all the monitoring data efficiently.</p>
+                <h3>Docker Environment Setup</h3>
+                <p>First, I created a Docker Compose configuration to run PostgreSQL in a container</p>
 
                 <div class="step">
-                    <h4>Step 1: Database Schema Creation</h4>
-                    <p>I created a comprehensive schema to store system metrics:</p>
+                    <h4>Step 1: Docker Compose Configuration</h4>
+                    <p>I created a <code>docker-compose.yml</code> file to define the PostgreSQL service:</p>
                     
                     <div class="code-block">
                         <div class="code-header">
-                            <span>schema.sql</span>
+                            <span>docker-compose.yml</span>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <i class="fas fa-copy"></i>
                             </button>
                         </div>
                         <pre>
-                            <code class="language-sql">
--- Create database
-CREATE DATABASE server_monitoring;
+                            <code class="language-yaml">
+version: '3.8'
 
--- Connect to the database
-\c server_monitoring;
+services:
+  postgres:
+    image: postgres
+    container_name: [container name]
+    restart: always
+    environment:
+      POSTGRES_DB: [db name]
+      POSTGRES_USER: [db user]
+      POSTGRES_PASSWORD: [password]
 
--- Create system_metrics table
-CREATE TABLE system_metrics (
-    id SERIAL PRIMARY KEY,
-    timestamp TIMESTAMP NOT NULL,
-    cpu_usage DECIMAL(5,2) NOT NULL,
-    memory_usage DECIMAL(5,2) NOT NULL,
-    disk_usage DECIMAL(5,2) NOT NULL,
-    load_average DECIMAL(8,2) NOT NULL,
-    process_count INTEGER NOT NULL,
-    network_connections INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-);
+    #the spacing and indenting very important
+    ports:
+      - "5432:5432" 
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
 
--- Create processes table for detailed process tracking
-CREATE TABLE process_snapshots (
-    id SERIAL PRIMARY KEY,
-    timestamp TIMESTAMP NOT NULL,
-    pid INTEGER NOT NULL,
-    process_name VARCHAR(255) NOT NULL,
-    cpu_percent DECIMAL(5,2) NOT NULL,
-    memory_percent DECIMAL(5,2) NOT NULL,
-    status VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Create indexes for better query performance
-CREATE INDEX idx_system_metrics_timestamp ON system_metrics(timestamp);
-CREATE INDEX idx_process_snapshots_timestamp ON process_snapshots(timestamp);
-CREATE INDEX idx_process_snapshots_process_name ON process_snapshots(process_name);
+volumes:
+  pgdata
                             </code>
                         </pre>
                     </div>
                 </div>
 
                 <div class="step">
-                    <h4>Step 2: Database Connection Setup</h4>
-                    <p>I created a database connection script to handle PostgreSQL interactions:</p>
+                    <h4>Step 2: Database Schema</h4>
+                    <p>The table schema can be created using these commands:</p>
+                    <span class="note">Careful to note that I created the tables directly in the database, not in the Dockerfile and many other options that include creating them from the bash script.</span>
+                    <p>To access the database use the command <code>docker-exec -it [container name] psql [db name] -U [db user]</code></p>
                     
                     <div class="code-block">
                         <div class="code-header">
-                            <span>db_config.sh</span>
+                            <span>Database interface</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-sql">
+-- Create tables which data will be placed
+CREATE TABLE IF NOT EXISTS memory_metrics (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    total_memory VARCHAR(10) NOT NULL,
+    memory_available VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS disk_metrics (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    device VARCHAR(50) NOT NULL,
+    size VARCHAR(10) NOT NULL,
+    available VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS io_metrics (
+    id SERIAL PRIMARY KEY,
+    timestamp TIMESTAMP NOT NULL,
+    io_wait DECIMAL(8,2) NOT NULL,
+    idle DECIMAL(8,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: Starting the Database Container</h4>
+                    <p>With the configuration ready, I started the PostgreSQL container:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Terminal Commands</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+# Start the PostgreSQL container
+docker-compose up -d
+
+# Check if container is running
+docker-compose ps
+
+# View container logs
+docker-compose logs postgres
+
+# Test database connection
+docker exec -it [container name] psql -U [user name] -d [db name] -c "SELECT version();"
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 4: Updating the Server Monitoring Script</h4>
+                    <p>I updated the monitoring script to include Docker exec commands for database operations:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>server_monitor.sh</span>
                             <button class="copy-btn" onclick="copyCode(this)">
                                 <i class="fas fa-copy"></i>
                             </button>
@@ -119,271 +174,122 @@ CREATE INDEX idx_process_snapshots_process_name ON process_snapshots(process_nam
                             <code class="language-bash">
 #!/bin/bash
 
-# Database configuration
-DB_HOST="localhost"
-DB_PORT="5432"
-DB_NAME="server_monitoring"
-DB_USER="monitor_user"
-DB_PASSWORD="secure_password"
+DATE=$(date +%Y%m%d)
+SCRIPT_PATH=$(realpath "$0")
+SCRIPT_DIR=$(dirname "$SCRIPT_PATH")
+mkdir -p "$SCRIPT_DIR/logs"
+ERRFILE="$SCRIPT_DIR/logs/server-monitor-$DATE-error.log"
 
-# Function to execute SQL queries
+# Database configuration
+DB_CONTAINER="[container name]"
+DB_USER="[db user]"
+DB_NAME="[db name]"
+
+# Function to execute SQL commands via Docker
 execute_sql() {
     local query="$1"
-    PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "$query"
+    docker exec -i "$DB_CONTAINER" psql -U "$DB_USER" -d "$DB_NAME" -c "$query" 2>> "$ERRFILE"
 }
 
-# Function to check database connection
-check_connection() {
-    if execute_sql "SELECT 1;" > /dev/null 2>&1; then
-        echo "Database connection successful"
+# Function to check if database is accessible
+check_db_connection() {
+    if docker exec "$DB_CONTAINER" psql -U "$DB_USER" -d "$DB_NAME" -c "SELECT 1;" > /dev/null 2>&1; then
         return 0
     else
-        echo "Database connection failed"
+        echo "$(date): Database connection failed" >> "$ERRFILE"
         return 1
     fi
 }
 
-# Function to insert system metrics
-insert_system_metrics() {
-    local timestamp="$1"
-    local cpu_usage="$2"
-    local memory_usage="$3"
-    local disk_usage="$4"
-    local load_average="$5"
-    local process_count="$6"
-    local network_connections="$7"
-    
-    local query="INSERT INTO system_metrics (timestamp, cpu_usage, memory_usage, disk_usage, load_average, process_count, network_connections) VALUES ('$timestamp', $cpu_usage, $memory_usage, $disk_usage, $load_average, $process_count, $network_connections);"
-    
-    execute_sql "$query"
-}
-                            </code>
-                        </pre>
-                    </div>
-                </div>
+# Files for saving server statistics (backup)
+MEMORY_FILE="$SCRIPT_DIR/logs/memory-metrics-$DATE.csv"
+DISK_FILE="$SCRIPT_DIR/logs/disk-usage-metrics-$DATE.csv"
+IO_FILE="$SCRIPT_DIR/logs/io-metrics-$DATE.csv"
 
-                <div class="step">
-                    <h4>Step 3: Enhanced Monitoring Script</h4>
-                    <p>I updated the monitoring script to write directly to PostgreSQL:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>db_monitor.sh</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-bash">
-#!/bin/bash
+# Create headers for the files
+[[ ! -f "$MEMORY_FILE" ]] && echo "Time,Total_Memory,Memory_Available" > $MEMORY_FILE
+[[ ! -f "$DISK_FILE" ]] && echo "Time,Device,Size,Available" > $DISK_FILE
+[[ ! -f "$IO_FILE" ]] && echo "Time,Io_wait,Idle" > $IO_FILE
 
-# Source database configuration
-source /path/to/db_config.sh
+# Get current timestamp
+CURRENT_TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
 
-# Check database connection
-if ! check_connection; then
-    echo "$(date): Database connection failed" >> /var/log/monitor_errors.log
-    exit 1
+# Collecting memory stats
+MEMORY_STATS=$(free -h | grep "Mem:" 2>> "$ERRFILE")
+MEM_TOTAL=$(echo $MEMORY_STATS | awk '{print $2}' 2>> "$ERRFILE")
+MEM_AVAIL=$(echo $MEMORY_STATS | awk '{print $7}' 2>> "$ERRFILE")
+
+# Save to CSV (backup)
+echo "$(date +'%d/%m/%Y %H:%M:%S'),$MEM_TOTAL,$MEM_AVAIL" >> "$MEMORY_FILE"
+
+# Insert into database
+if check_db_connection; then
+    MEMORY_INSERT="INSERT INTO memory_metrics (timestamp, total_memory, memory_available) VALUES ('$CURRENT_TIMESTAMP', '$MEM_TOTAL', '$MEM_AVAIL');"
+    execute_sql "$MEMORY_INSERT"
+    echo "$(date): Memory metrics inserted into database" >> "$SCRIPT_DIR/logs/db-success.log"
 fi
 
-# Get current timestamp in PostgreSQL format
-timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-
-# Collect system metrics
-cpu_usage=$(top -bn1 | grep "Cpu(s)" | sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | awk '{print 100 - $1}')
-memory_usage=$(free | grep Mem | awk '{printf "%.2f", $3/$2 * 100.0}')
-disk_usage=$(df -h / | awk 'NR==2{print $5}' | sed 's/%//')
-load_average=$(uptime | awk -F'load average:' '{print $2}' | cut -d, -f1 | sed 's/^ *//')
-process_count=$(ps aux | wc -l)
-network_connections=$(netstat -an | grep ESTABLISHED | wc -l)
-
-# Insert metrics into database
-if insert_system_metrics "$timestamp" "$cpu_usage" "$memory_usage" "$disk_usage" "$load_average" "$process_count" "$network_connections"; then
-    echo "$(date): Successfully inserted metrics" >> /var/log/monitor_success.log
-else
-    echo "$(date): Failed to insert metrics" >> /var/log/monitor_errors.log
-fi
-
-# Insert top processes
-ps aux --sort=-%cpu | head -10 | while read line; do
-    pid=$(echo $line | awk '{print $2}')
-    process_name=$(echo $line | awk '{print $11}')
-    cpu_percent=$(echo $line | awk '{print $3}')
-    memory_percent=$(echo $line | awk '{print $4}')
-    status=$(echo $line | awk '{print $8}')
+# Collecting and saving disk usage stats
+df -h | grep -E "^/dev/" | while read specs; do
+    DEVICE=$(echo $specs | awk '{print $1}' 2>> "$ERRFILE")
+    SIZE=$(echo $specs | awk '{print $2}' 2>> "$ERRFILE")
+    AVAIL=$(echo $specs | awk '{print $4}' 2>> "$ERRFILE")
     
-    # Skip header line
-    if [[ "$pid" =~ ^[0-9]+$ ]]; then
-        query="INSERT INTO process_snapshots (timestamp, pid, process_name, cpu_percent, memory_percent, status) VALUES ('$timestamp', $pid, '$process_name', $cpu_percent, $memory_percent, '$status');"
-        execute_sql "$query"
+    # Save to CSV (backup)
+    echo "$(date +'%d/%m/%Y %H:%M:%S'),$DEVICE,$SIZE,$AVAIL" >> "$DISK_FILE"
+    
+    # Insert into database
+    if check_db_connection; then
+        # Escape device name for SQL
+        DEVICE_ESCAPED=$(echo "$DEVICE" | sed "s/'/''/g")
+        DISK_INSERT="INSERT INTO disk_metrics (timestamp, device, size, available) VALUES ('$CURRENT_TIMESTAMP', '$DEVICE_ESCAPED', '$SIZE', '$AVAIL');"
+        execute_sql "$DISK_INSERT"
     fi
-done
+done 2>> "$ERRFILE"
+
+# Collecting and saving IO stats
+IO_STATS=$(iostat -c | tail -n 1 2>> "$ERRFILE")
+IOWAIT=$(echo $IO_STATS | awk '{print $4}' 2>> "$ERRFILE")
+IDLE=$(echo $IO_STATS | awk '{print $6}' 2>> "$ERRFILE")
+
+# Save to CSV (backup)
+echo "$(date +'%d/%m/%Y %H:%M:%S'),$IOWAIT,$IDLE" >> "$IO_FILE"
+
+# Insert into database
+if check_db_connection; then
+    IO_INSERT="INSERT INTO io_metrics (timestamp, io_wait, idle) VALUES ('$CURRENT_TIMESTAMP', $IOWAIT, $IDLE);"
+    execute_sql "$IO_INSERT"
+    echo "$(date): IO metrics inserted into database" >> "$SCRIPT_DIR/logs/db-success.log"
+fi
+
+# Log successful completion
+echo "$(date): Monitoring script completed successfully" >> "$SCRIPT_DIR/logs/monitor-success.log"
                             </code>
                         </pre>
                     </div>
                 </div>
 
-                <div class="step">
-                    <h4>Step 4: Grafana Dashboard Setup</h4>
-                    <p>I configured Grafana to connect to PostgreSQL and created visualizations:</p>
-                    
-                    <div class="code-block">
-                        <div class="code-header">
-                            <span>grafana_queries.sql</span>
-                            <button class="copy-btn" onclick="copyCode(this)">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <pre>
-                            <code class="language-sql">
--- CPU Usage Over Time
-SELECT 
-    timestamp as time,
-    cpu_usage as "CPU Usage (%)"
-FROM system_metrics
-WHERE timestamp >= NOW() - INTERVAL '24 hours'
-ORDER BY timestamp;
-
--- Memory Usage Trends
-SELECT 
-    timestamp as time,
-    memory_usage as "Memory Usage (%)",
-    (100 - memory_usage) as "Available Memory (%)"
-FROM system_metrics
-WHERE timestamp >= NOW() - INTERVAL '24 hours'
-ORDER BY timestamp;
-
--- System Load Average
-SELECT 
-    timestamp as time,
-    load_average as "Load Average"
-FROM system_metrics
-WHERE timestamp >= NOW() - INTERVAL '24 hours'
-ORDER BY timestamp;
-
--- Top Processes by CPU
-SELECT 
-    process_name as "Process",
-    AVG(cpu_percent) as "Average CPU %",
-    MAX(cpu_percent) as "Peak CPU %"
-FROM process_snapshots
-WHERE timestamp >= NOW() - INTERVAL '1 hour'
-GROUP BY process_name
-ORDER BY "Average CPU %" DESC
-LIMIT 10;
-
--- Network Connections Over Time
-SELECT 
-    timestamp as time,
-    network_connections as "Active Connections"
-FROM system_metrics
-WHERE timestamp >= NOW() - INTERVAL '24 hours'
-ORDER BY timestamp;
-                            </code>
-                        </pre>
-                    </div>
-                </div>
-
-                <h3>Database Optimization</h3>
-                <div class="learning-points">
-                    <div class="point">
-                        <div>
-                            <h4>Indexing Strategy</h4>
-                            <p>Created indexes on timestamp columns for faster time-based queries, crucial for dashboard performance.</p>
-                        </div>
-                    </div>
-                    <div class="point">
-                        <div>
-                            <h4>Data Retention Policy</h4>
-                            <p>Implemented automatic cleanup of old data to prevent database bloat while maintaining historical trends.</p>
-                        </div>
-                    </div>
-                    <div class="point">
-                        <div>
-                            <h4>Connection Pooling</h4>
-                            <p>Learned about pgBouncer for connection pooling to handle multiple monitoring scripts efficiently.</p>
-                        </div>
-                    </div>
-                    <div class="point">
-                        <div>
-                            <h4>Backup Strategy</h4>
-                            <p>Set up automated backups using pg_dump with compression and rotation for data protection.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>Grafana Dashboard Features</h3>
-                <p>The Grafana dashboard provides comprehensive system monitoring with:</p>
+                <h3>Server script changes</h3>
+                <p>The latest script has the following changes:</p>
                 <ul>
-                    <li><strong>Real-time Metrics:</strong> Live CPU, memory, and disk usage graphs</li>
-                    <li><strong>Historical Trends:</strong> Time-series data for pattern analysis</li>
-                    <li><strong>Process Monitoring:</strong> Top processes by resource consumption</li>
-                    <li><strong>Network Activity:</strong> Connection counts and trends</li>
-                    <li><strong>Alerting:</strong> Email notifications for threshold breaches</li>
-                    <li><strong>Custom Time Ranges:</strong> Zoom into specific time periods</li>
+                    <li><strong>Dual Storage:</strong> Data is saved to both CSV files (backup) and PostgreSQL database</li>
+                    <li><strong>Error Handling:</strong> Comprehensive error logging and connection checking</li>
+                    <li><strong>Docker Integration:</strong> Uses docker exec for database operations</li>
+                    <li><strong>Logging:</strong> Separate success and error logs for better monitoring</li>
                 </ul>
-
-                <h3>Key Insights Gained</h3>
-                <p>The dashboard revealed several interesting patterns:</p>
-                <ul>
-                    <li>CPU usage spikes during backup operations at 2 AM</li>
-                    <li>Memory usage gradually increases throughout the day</li>
-                    <li>Network connections peak during business hours</li>
-                    <li>Disk usage remains stable with predictable growth</li>
-                </ul>
-
-                <h3>Challenges Overcome</h3>
-                <p>Several technical challenges were solved during this implementation:</p>
-                <ul>
-                    <li><strong>Data Type Conversion:</strong> Converting string data from bash to proper PostgreSQL types</li>
-                    <li><strong>Error Handling:</strong> Robust error handling for database connection failures</li>
-                    <li><strong>Performance Optimization:</strong> Optimizing queries for large datasets</li>
-                    <li><strong>Security:</strong> Implementing proper database authentication and permissions</li>
-                </ul>
-
-                <h3>Data Retention Script</h3>
-                <div class="code-block">
-                    <div class="code-header">
-                        <span>cleanup.sh</span>
-                        <button class="copy-btn" onclick="copyCode(this)">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                    </div>
-                    <pre>
-                        <code class="language-bash">
-#!/bin/bash
-
-# Source database configuration
-source /path/to/db_config.sh
-
-# Delete data older than 30 days
-cleanup_query="DELETE FROM system_metrics WHERE timestamp < NOW() - INTERVAL '30 days';"
-execute_sql "$cleanup_query"
-
-# Delete old process snapshots (keep only 7 days)
-cleanup_processes="DELETE FROM process_snapshots WHERE timestamp < NOW() - INTERVAL '7 days';"
-execute_sql "$cleanup_processes"
-
-# Vacuum and analyze for performance
-execute_sql "VACUUM ANALYZE system_metrics;"
-execute_sql "VACUUM ANALYZE process_snapshots;"
-
-echo "$(date): Database cleanup completed" >> /var/log/db_cleanup.log
-                        </code>
-                    </pre>
-                </div>
 
                 <h3>Next Steps</h3>
-                <p>With the monitoring system now powered by PostgreSQL and Grafana, the next enhancements include:</p>
+                <p>With the Dockerized PostgreSQL integration complete, future enhancements include:</p>
                 <ul>
-                    <li>Implement predictive analytics for resource planning</li>
-                    <li>Add application-specific monitoring</li>
-                    <li>Create custom alerting rules for different scenarios</li>
-                    <li>Integrate with Slack for real-time notifications</li>
-                    <li>Add geographic monitoring for distributed systems</li>
+                    <li>Add Grafana container to the Docker Compose setup</li>
+                    <li>Implement container health checks and auto-restart policies</li>
+                    <li>Create a monitoring dashboard web interface</li>
+                    <li>Add email alerts for system threshold breaches</li>
+                    <li>Implement database replication for high availability</li>
+                    <li>Add container resource monitoring to track Docker metrics</li>
                 </ul>
             </div>
-        </div> -->
+        </div>
 
         <div class="navigation">
             <div class="nav-item prev" onclick="navigateToPost('prev')">
@@ -403,5 +309,6 @@ echo "$(date): Database cleanup completed" >> /var/log/db_cleanup.log
         </footer>
 
         <script src="js/blog.js"></script>
+
     </body>
 </html>

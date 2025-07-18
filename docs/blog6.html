@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blog Entry | NextJS Website Setup</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.png">
+        <link rel="stylesheet" href="css/entries.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-tomorrow.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-core.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/plugins/autoloader/prism-autoloader.min.js"></script>
+    </head>
+    <body>
+        <div class="header">
+            <i class='bx bx-arrow-back back' onclick="window.history.back()"></i>
+            <div class="logHeading">
+                <i id="topper" class="devicon-nextjs-plain context"></i>
+                <span class="heading">NextJS Website Migration</span>
+            </div>
+        </div>
+
+        <!-- <div class="container">
+            <div class="log-meta">
+                <div class="date">
+                    <i class="fas fa-calendar"></i>
+                    <span>June 23, 2025</span>
+                </div>
+                <div class="reading-time">
+                    <i class="fas fa-clock"></i>
+                    <span>4 min read</span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h2>NextJS Website Migration Journey</h2>
+                
+                <p>The long anticipated website migration has started! Well, I've just cloned the repo and set up the environment, so we'll see how it goes. Moving from a static HTML/CSS/JS setup to a modern React-based NextJS framework is both exciting and challenging. This migration represents a significant step forward in my development skills.</p>
+
+                <h3>Why NextJS?</h3>
+                <p>After working with vanilla HTML, CSS, and JavaScript for my blog, I realized the limitations when it comes to building more complex, scalable applications. NextJS offers several advantages:</p>
+                <ul>
+                    <li>Server-side rendering for better SEO and performance</li>
+                    <li>Built-in routing system</li>
+                    <li>Automatic code splitting and optimization</li>
+                    <li>Easy deployment with Vercel</li>
+                    <li>Great developer experience with hot reloading</li>
+                    <li>React-based component architecture</li>
+                </ul>
+
+                <h3>Project Setup</h3>
+                <p>Getting started with NextJS was surprisingly straightforward. Here's how I set up the development environment:</p>
+
+                <div class="step">
+                    <h4>Step 1: Environment Setup</h4>
+                    <p>First, I made sure I had the latest version of Node.js installed and then created a new NextJS project:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-bash">
+# Check Node.js version
+node --version
+
+# Create new NextJS project
+npx create-next-app@latest my-portfolio
+cd my-portfolio
+
+# Install additional dependencies
+npm install tailwindcss postcss autoprefixer
+npm install @next/font lucide-react
+
+# Run development server
+npm run dev
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: Project Structure</h4>
+                    <p>NextJS comes with a well-organized project structure. Here's what I'm working with:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>Project Structure</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-plaintext">
+my-portfolio/
+├── app/
+│   ├── globals.css
+│   ├── layout.js
+│   ├── page.js
+│   └── components/
+├── public/
+│   ├── assets/
+│   └── favicon.ico
+├── lib/
+├── package.json
+└── next.config.js
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: Tailwind CSS Configuration</h4>
+                    <p>I decided to use Tailwind CSS for styling instead of writing custom CSS. Here's the configuration:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>tailwind.config.js</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-javascript">
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: '#654321',
+        secondary: '#fbbf24',
+        accent: '#512c0a',
+      },
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
+    },
+  },
+  plugins: [],
+}
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 4: Creating the Layout Component</h4>
+                    <p>Started with a basic layout component that will be shared across all pages:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>app/layout.js</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-javascript">
+import { Inter } from 'next/font/google'
+import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
+
+export const metadata = {
+  title: 'Baraka Maurice | Developer Portfolio',
+  description: 'Full-stack developer portfolio showcasing projects and blog posts',
+}
+
+export default function RootLayout({ children }) {
+  return (
+    &lt;html lang="en"&gt;
+      &lt;body className={inter.className}&gt;
+        &lt;div className="min-h-screen bg-gray-50"&gt;
+          {children}
+        &lt;/div&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  )
+}
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h4>Step 5: Home Page Component</h4>
+                    <p>Created the main page component, starting with a simple structure:</p>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span>app/page.js</span>
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <pre>
+                            <code class="language-javascript">
+import Navigation from './components/Navigation'
+import Hero from './components/Hero'
+import About from './components/About'
+import Skills from './components/Skills'
+import Projects from './components/Projects'
+import Contact from './components/Contact'
+
+export default function Home() {
+  return (
+    &lt;main&gt;
+      &lt;Navigation /&gt;
+      &lt;Hero /&gt;
+      &lt;About /&gt;
+      &lt;Skills /&gt;
+      &lt;Projects /&gt;
+      &lt;Contact /&gt;
+    &lt;/main&gt;
+  )
+}
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+
+                <h3>Migration Challenges</h3>
+                <div class="learning-points">
+                    <div class="point">
+                        <div>
+                            <h4>Component Thinking</h4>
+                            <p>Moving from procedural HTML/CSS/JS to component-based architecture requires a shift in thinking. Breaking down the UI into reusable components is both powerful and initially confusing.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>State Management</h4>
+                            <p>Learning React hooks like useState and useEffect for managing component state and side effects. This is very different from vanilla JavaScript event handling.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>CSS-in-JS vs Tailwind</h4>
+                            <p>Adapting to Tailwind's utility-first approach after writing custom CSS. The learning curve is steep, but the productivity gains are significant.</p>
+                        </div>
+                    </div>
+                    <div class="point">
+                        <div>
+                            <h4>Build Process</h4>
+                            <p>Understanding NextJS's build process, including server-side rendering, static generation, and the differences between development and production builds.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>What I've Learned So Far</h3>
+                <p>Even though I'm just getting started, I've already learned several important concepts:</p>
+                <ul>
+                    <li><strong>JSX Syntax:</strong> Writing HTML-like syntax within JavaScript</li>
+                    <li><strong>Props:</strong> Passing data between components</li>
+                    <li><strong>File-based Routing:</strong> How NextJS automatically creates routes based on file structure</li>
+                    <li><strong>Image Optimization:</strong> Using NextJS's built-in Image component for better performance</li>
+                    <li><strong>CSS Modules:</strong> Scoped styling to prevent CSS conflicts</li>
+                    <li><strong>API Routes:</strong> Creating serverless functions within the NextJS app</li>
+                </ul>
+
+                <h3>Development Workflow</h3>
+                <p>My current development process involves:</p>
+                <ul>
+                    <li>Planning components and their relationships</li>
+                    <li>Creating reusable UI components</li>
+                    <li>Testing components in isolation</li>
+                    <li>Integrating components into pages</li>
+                    <li>Optimizing for performance and SEO</li>
+                    <li>Deploying to Vercel for testing</li>
+                </ul>
+
+                <h3>Next Steps</h3>
+                <p>The migration is just beginning, but I have a clear roadmap ahead:</p>
+                <ul>
+                    <li>Complete the hero section and navigation components</li>
+                    <li>Migrate the blog system to use MDX for better content management</li>
+                    <li>Implement dynamic routing for blog posts</li>
+                    <li>Add animations and transitions using Framer Motion</li>
+                    <li>Set up a headless CMS for content management</li>
+                    <li>Implement dark mode toggle</li>
+                    <li>Add search functionality for blog posts</li>
+                    <li>Deploy to production with custom domain</li>
+                </ul>
+
+                <p>This NextJS migration represents a significant leap in my development journey. While there's still much to learn, the foundation is solid, and I'm excited to see how this more modern approach will improve both the development experience and the final product.</p>
+            </div>
+        </div> -->
+
+        <div class="navigation">
+            <div class="nav-item prev">
+                <i class="fas fa-chevron-left"></i>
+                <span>Previous Post</span>
+            </div>
+            <div class="nav-item next disabled">
+                <span>Next Post</span>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 Baraka Maurice. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script src="js/blog.js"></script>
+    </body>
+</html>
